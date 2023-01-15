@@ -1,19 +1,24 @@
 package library.solid.repository;
 
+import library.solid.domain.Grade;
 import library.solid.domain.Member;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MemberRepositoryImpl implements MemberRepository{
 
-    public static Map<Long, Member> store;
+    private static Map<Long, Member> store = new HashMap<>();
+    private static Long sequence = 0L;
 
-    public void save(Member member) {
+    @Override
+    public Member save(String name, Grade grade) {
+        return store.put(++sequence, new Member(sequence, name, grade));
     }
 
     @Override
     public Member findById(Long id) {
-        return null;
+        return store.get(id);
     }
 
 }
