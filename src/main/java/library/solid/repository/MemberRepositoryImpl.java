@@ -9,11 +9,11 @@ import java.util.Map;
 public class MemberRepositoryImpl implements MemberRepository{
 
     private static Map<Long, Member> store = new HashMap<>();
-    private static Long sequence = 0L;
 
     @Override
     public Member save(String name, Grade grade) {
-        return store.put(++sequence, new Member(sequence, name, grade));
+        Member member = new Member(Sequence.getSequence(), name, grade);
+        return store.put(member.getId(), member);
     }
 
     @Override
