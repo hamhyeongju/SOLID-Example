@@ -35,7 +35,7 @@ public class DiscountLoanService implements LoanService{
         if (book.getStockQuantity() == 0) throw new OutOfStockException();
 
         int loanPrice = Grade.BASIC.equals(member.getGrade()) ?
-                book.getPrice() / 20 : book.getPrice() / 10;
+                book.getPrice() / 5 : book.getPrice() / 10;
 
         return Loan.createLoan(Sequence.getSequence(), bookId, loanPrice, member, book);
     }
