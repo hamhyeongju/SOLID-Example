@@ -1,4 +1,4 @@
-package library.solid.repository;
+package library.solid.domain;
 
 public class Sequence {
 
