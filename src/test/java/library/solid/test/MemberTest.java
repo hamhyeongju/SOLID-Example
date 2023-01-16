@@ -4,8 +4,11 @@ import library.solid.ApplicationInit;
 import library.solid.domain.Grade;
 import library.solid.domain.Member;
 import library.solid.repository.MemberRepository;
+import library.solid.domain.Sequence;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
 
 public class MemberTest {
 
@@ -16,12 +19,12 @@ public class MemberTest {
     @Test
     public void createMember() throws Exception {
         //given
-        Member basic_member = memberRepository.save("Basic member", Grade.BASIC);
-        Member vip_member = memberRepository.save("VIP member", Grade.VIP);
+        Long long1 = memberRepository.save(new Member(Sequence.getSequence(), "Member 1", Grade.BASIC, new HashMap<>()));
+        Long long2 = memberRepository.save(new Member(Sequence.getSequence(), "Member 2", Grade.VIP, new HashMap<>()));
 
         //when
-        Member find1 = memberRepository.findById(1L);
-        Member find2 = memberRepository.findById(2L);
+        Member find1 = memberRepository.findById(long1);
+        Member find2 = memberRepository.findById(long2);
 
         //then
         Assertions.assertThat(find1.getName()).isEqualTo("Basic member");
