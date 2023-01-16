@@ -1,9 +1,11 @@
 package library.solid.service;
 
-import library.solid.domain.Member;
+import library.solid.domain.Loan;
 
 public interface LoanService {
 
-    void loan(Long memberId, Long bookId);
+    Loan loan(Long memberId, Long bookId);
+
+    void returnBook(Long loanId, Long memberId, Long bookId);
 
 }
