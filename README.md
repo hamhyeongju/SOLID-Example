@@ -38,8 +38,8 @@
 
 ## 실행 방법 (윈도우 10, 인텔리제이 기준)
 1. 프로젝트 다운
-2. 인텔리제이 Open build.gradle (Open as Project)
-2-1. 2.에서 gradle을 통해 외부 라이브러리의 의존성이 추가되지 않았다면 우측의 gradle 패널을 펼처 직접 reload 해주어야 합니다.
+2. 인텔리제이 Open build.gradle (Open as Project)<br>
+2-1. gradle을 통해 외부 라이브러리의 의존성이 추가되지 않았다면 우측의 gradle 패널을 펼처 직접 reload
 3. ApplicationInit 의 `LoanService loanService()` 메서드에서 DiscountLoanService와 LimitLoanService 중에서 반환할 구현체를 선택
 4. `src/test/java/library/solid/test` 해당 패키지 우클릭 후 `Run 'Tests in 'test''` 클릭 (기본 단축키 ctrl+shift+F10)
-5. 3. 에서 선택한 구현체에 따라 `DiscountLoanTest`와 `LimitLoanTest` 중 하나만 정상적으로 테스트 성공
+5. 3.에서 선택한 구현체에 따라 `DiscountLoanTest`와 `LimitLoanTest` 중 하나만 정상적으로 테스트 성공
