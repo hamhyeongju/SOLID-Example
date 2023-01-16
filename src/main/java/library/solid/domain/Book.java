@@ -12,4 +12,11 @@ public class Book {
     private int price;
     private int stockQuantity;
 
+    public void minusStockQuantity() {
+        this.stockQuantity--;
+    }
+
+    public void plusStockQuantity() {
+        this.stockQuantity++;
+    }
 }
