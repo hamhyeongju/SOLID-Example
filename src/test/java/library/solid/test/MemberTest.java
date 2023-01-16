@@ -17,10 +17,10 @@ public class MemberTest {
     private final MemberRepository memberRepository = init.memberRepository();
 
     @Test
-    public void createMember() throws Exception {
+    public void createMember() {
         //given
-        Long long1 = memberRepository.save(new Member(Sequence.getSequence(), "Member 1", Grade.BASIC, new HashMap<>()));
-        Long long2 = memberRepository.save(new Member(Sequence.getSequence(), "Member 2", Grade.VIP, new HashMap<>()));
+        Long long1 = memberRepository.save(Member.createMember(Sequence.getSequence(), "Basic member", Grade.BASIC, new HashMap<>()));
+        Long long2 = memberRepository.save(Member.createMember(Sequence.getSequence(), "VIP member", Grade.VIP, new HashMap<>()));
 
         //when
         Member find1 = memberRepository.findById(long1);

@@ -21,21 +21,19 @@ public class LimitLoanTest {
 
     private static final MemberRepository memberRepository = init.memberRepository();
     private static final BookRepository bookRepository = init.bookRepository();
-    private static LoanService loanService;
+    private static LoanService loanService = init.loanService(); // LimitLoanService 주입
 
     @Test
     @DisplayName("등급에 따른 대출 한도")
     public void limitAccordingToGrade() {
         /****** given - 회원, 책 생성 *************/
-        loanService = init.loanService(); // LimitLoanService 주입
-
         Long basicMemberId = memberRepository.save(
-                new Member(Sequence.getSequence(), "basicMember", Grade.BASIC, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "basicMember", Grade.BASIC, new HashMap<>()));
         Long vipMemberId = memberRepository.save(
-                new Member(Sequence.getSequence(), "vipMember", Grade.VIP, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "vipMember", Grade.VIP, new HashMap<>()));
 
         Long bookId = bookRepository.save(
-                new Book(Sequence.getSequence(), "book", "author", 12000, 10));
+                Book.createBook(Sequence.getSequence(), "book", "author", 12000, 10));
         /****** given - 회원, 책 생성 *************/
 
         /****** when v1 - BASIC 회원 대출 실행 *************/
@@ -57,17 +55,15 @@ public class LimitLoanTest {
     @Test @DisplayName("도서 재고 예외 및 공통 정책")
     public void exception() {
         /****** given - 회원, 책 생성 *************/
-        loanService = init.loanService(); // LimitLoanService 주입
-
         Long basicMemberId = memberRepository.save(
-                new Member(Sequence.getSequence(), "basicMember", Grade.BASIC, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "basicMember", Grade.BASIC, new HashMap<>()));
         Long vipMemberId = memberRepository.save(
-                new Member(Sequence.getSequence(), "vipMember", Grade.VIP, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "vipMember", Grade.VIP, new HashMap<>()));
 
         Long book1Id = bookRepository.save(
-                new Book(Sequence.getSequence(), "book1", "author1", 12000, 10));
+                Book.createBook(Sequence.getSequence(), "book1", "author1", 12000, 10));
         Long book2Id = bookRepository.save(
-                new Book(Sequence.getSequence(), "book2", "author2", 12000, 0));
+                Book.createBook(Sequence.getSequence(), "book2", "author2", 12000, 0));
         /****** given - 회원, 책 생성 *************/
 
         /****** when v1 - 대출 실행 *************/
@@ -94,7 +90,6 @@ public class LimitLoanTest {
         // VIP 멤버 - 12000 * 0.1 = 1200
         assertThat(member2Loan.getLoanPrice()).isEqualTo(1200);
         /****** then v1 - 대출 결과 *************/
-
 
         /****** when v2 - 대출 반납 실행 *************/
         loanService.returnBook(member1Loan.getId(), basicMemberId, book1Id);

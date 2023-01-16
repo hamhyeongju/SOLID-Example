@@ -1,9 +1,8 @@
 package library.solid.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter @AllArgsConstructor
+@Getter
 public class Book {
 
     private Long id;
@@ -11,6 +10,16 @@ public class Book {
     private String author;
     private int price;
     private int stockQuantity;
+
+    public static Book createBook(Long id, String name, String author, int price, int stockQuantity) {
+        Book book = new Book();
+        book.id = id;
+        book.name = name;
+        book.author = author;
+        book.price = price;
+        book.stockQuantity = stockQuantity;
+        return book;
+    }
 
     public void minusStockQuantity() {
         this.stockQuantity--;
