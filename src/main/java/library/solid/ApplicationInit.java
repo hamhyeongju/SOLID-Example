@@ -2,6 +2,7 @@ package library.solid;
 
 import library.solid.repository.*;
 import library.solid.service.DiscountLoanService;
+import library.solid.service.LimitLoanService;
 import library.solid.service.LoanService;
 
 public class ApplicationInit {
@@ -15,6 +16,7 @@ public class ApplicationInit {
     }
 
     public LoanService loanService() {
-        return new DiscountLoanService(memberRepository(), bookRepository());
+//        return new DiscountLoanService(memberRepository(), bookRepository());
+        return new LimitLoanService(memberRepository(), bookRepository());
     }
 }
