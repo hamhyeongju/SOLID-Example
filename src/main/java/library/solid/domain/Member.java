@@ -1,10 +1,11 @@
 package library.solid.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.Map;
 
-@Getter
+@Getter @EqualsAndHashCode
 public class Member {
 
     private Long id;
