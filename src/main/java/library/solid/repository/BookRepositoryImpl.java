@@ -22,10 +22,4 @@ public class BookRepositoryImpl implements BookRepository{
         return store.get(id);
     }
 
-    @Override
-    public List<Book> findAll() {
-        List<Book> books = new ArrayList<>();
-        store.forEach((aLong, book) -> books.add(book));
-        return books;
-    }
 }
