@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
+import static org.assertj.core.api.Assertions.*;
+
 public class MemberTest {
 
     ApplicationInit init = new ApplicationInit();
@@ -18,20 +20,28 @@ public class MemberTest {
 
     @Test
     public void createMember() {
-        //given
-        Long long1 = memberRepository.save(Member.createMember(Sequence.getSequence(), "Basic member", Grade.BASIC, new HashMap<>()));
-        Long long2 = memberRepository.save(Member.createMember(Sequence.getSequence(), "VIP member", Grade.VIP, new HashMap<>()));
+        /****** given - 회원 생성 *************/
+        Member basic_member = Member.createMember(Sequence.getSequence(), "Basic member", Grade.BASIC, new HashMap<>());
+        Member vip_member = Member.createMember(Sequence.getSequence(), "VIP member", Grade.VIP, new HashMap<>());
+        Long long1 = memberRepository.save(basic_member);
+        Long long2 = memberRepository.save(vip_member);
+        /****** given - 회원 생성 *************/
 
-        //when
+        /****** when - 회원 조회 *************/
+        // BASIC Member
         Member find1 = memberRepository.findById(long1);
+        // VIP Member
         Member find2 = memberRepository.findById(long2);
+        /****** when - 회원 조회 *************/
 
-        //then
-        Assertions.assertThat(find1.getName()).isEqualTo("Basic member");
-        Assertions.assertThat(find1.getGrade()).isEqualTo(Grade.BASIC);
+        /****** then - 회원 비교 *************/
+        // 리포지토리에 저장이 잘 됐는지, 등급은 맞는 지 비교
+        assertThat(basic_member).isEqualTo(find1);
+        assertThat(find1.getGrade()).isEqualTo(Grade.BASIC);
 
-        Assertions.assertThat(find2.getName()).isEqualTo("VIP member");
-        Assertions.assertThat(find2.getGrade()).isEqualTo(Grade.VIP);
+        assertThat(vip_member).isEqualTo(find2);
+        assertThat(find2.getGrade()).isEqualTo(Grade.VIP);
+        /****** then - 회원 비교 *************/
 
     }
 }
