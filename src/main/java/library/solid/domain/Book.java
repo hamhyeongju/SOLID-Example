@@ -1,8 +1,9 @@
 package library.solid.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@Getter
+@Getter @EqualsAndHashCode
 public class Book {
 
     private Long id;
