@@ -2,13 +2,11 @@ package library.solid.test;
 
 import library.solid.ApplicationInit;
 import library.solid.domain.Book;
-import library.solid.repository.BookRepository;
 import library.solid.domain.Sequence;
+import library.solid.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BookTest {
 
@@ -17,18 +15,17 @@ public class BookTest {
 
     @Test
     public void createBook() {
-        //given
-        Long long1 = bookRepository.save(Book.createBook(Sequence.getSequence(), "book " + 1, "author " + 1, 3000 * 4, 1));
-        Long long2 = bookRepository.save(Book.createBook(Sequence.getSequence(), "book " + 2, "author " + 2, 3000 * 5, 2));
-        Long long3 = bookRepository.save(Book.createBook(Sequence.getSequence(), "book " + 3, "author " + 3, 3000 * 6, 3));
-        Long long4 = bookRepository.save(Book.createBook(Sequence.getSequence(), "book " + 4, "author " + 4, 3000 * 7, 4));
-        Long long5 = bookRepository.save(Book.createBook(Sequence.getSequence(), "book " + 5, "author " + 5, 3000 * 8, 5));
+        /****** given - 책 생성 *************/
+        Book book1 = Book.createBook(Sequence.getSequence(), "book1", "author1", 12000, 1);
+        Long long1 = bookRepository.save(book1);
+        /****** given - 책 생성 *************/
 
-        //when
-        List<Book> books = bookRepository.findAll();
+        /****** when - 책 조회 *************/
+        Book findBook = bookRepository.findById(long1);
+        /****** when - 책 조회 *************/
 
-        //then
-        assertThat(books).extracting("id").contains(long1,long2, long3, long4, long5);
-
+        /****** then - 책 비교 *************/
+        assertThat(findBook).isEqualTo(book1);
+        /****** then - 책 비교 *************/
     }
 }
