@@ -28,11 +28,10 @@ public class LimitLoanService implements LoanService{
         Book book = bookRepository.findById(bookId);
 
         if (book.getStockQuantity() == 0) throw new OutOfStockException();
-        if (member.getGrade().equals(Grade.BASIC)) {
-            if (member.getLoans().size() >= 1) throw new OutOfLoanLimitException();
-        } else {
-            if (member.getLoans().size() >= 3) throw new OutOfLoanLimitException();
-        }
+        if (member.getGrade().equals(Grade.BASIC) && member.getLoans().size() >= 1)
+            throw new OutOfLoanLimitException();
+        else if (member.getGrade().equals(Grade.VIP) && member.getLoans().size() >= 3)
+            throw new OutOfLoanLimitException();
 
         return Loan.createLoan(Sequence.getSequence(), bookId, book.getPrice() / 10, member, book);
     }
