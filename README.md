@@ -3,7 +3,6 @@
 객체 지향 개발 5원칙인 SOLID 의 이해를 높이기 위해 진행한 프로젝트입니다.<br>
 간단한 도서 대출 시스템을 SOILD 원칙을 준수하도록 설계하여 개발했습니다.<br>
 해당 프로젝트의 전체적인 퀄리티보다 SOLID 원칙을 따라 설계하는 것이 목표였기에 최대한 간단한 예제로 구성했습니다.<br>
-의존성 주입(Dependency Injection)을 담당하는 클래스를 구현하여 DIP(의존관계 역전 원칙)을 준수하고자 했습니다.
 
 ## 개발환경
 * IDE : IntelliJ
@@ -32,12 +31,14 @@
 
 **[Book]**
 * 책은 Long id, String name, String author, int price, int stockQuantity의 필드를 가진다.
+* 재고가 0인 책에 대출이 실행되면 예외를 생성한다.
 
 **[Loan]**
-* 대출은 Long id, Long bookId, int loanPrice 필드를 갖는다.
+* 대출은 Long id, Member member, Book book 필드를 갖는다.
 
 **[Repository]**
 * Repository는 도메인 객체의 저장과 조회 기능을 담당한다.
+ * LoanRepository 는 대출 객체 삭제 기능을 추가로 담당한다.
 
 **[LoanService]**
 * 해당 서비스는 DiscountLoanService, LimitLoanService 구현체를 가진다.
@@ -54,3 +55,23 @@
 3. ApplicationInit 의 `LoanService loanService()` 메서드에서 DiscountLoanService와 LimitLoanService 중에서 반환할 구현체를 선택
 4. `src/test/java/library/solid/test` 해당 패키지 우클릭 후 `Run 'Tests in 'test''` 클릭 (기본 단축키 ctrl+shift+F10)
 5. 3.에서 선택한 구현체에 따라 `DiscountLoanTest`와 `LimitLoanTest` 중 하나만 정상적으로 테스트 성공
+6. 대출의 생성 및 삭제, 재고 예외 테스트를 담당하는 LoanTest는 LoanService 구현체가 변화해도 정상 실행
+
+## 결과 정리
+
+### SRP 
+* domain 객체는 생성 메서드 및 삭제 메서드로 본인의 생명주기를 관리
+* repository 객체는 각 도메인 객체의 저장과 조회 기능 담당
+* service 객체는 핵심 기능인 대출의 실행 및 반납을 담당
+
+### OCP
+* 정책 변경 시 ApplicationInit 만 수정해도 클라이언트 코드 수정 없이 LoanService 구현체를 바꿀 수 있음
+
+### LSP
+* LoanTest는 LoanService에 의존하고 있고 구현체의 상관 없이 대출 실행과 반납이 정상 동작함
+
+### ISP
+* 각 구현체는 상속 받은 인터페이스의 모든 기능을 이용하고 있음
+
+### DIP 
+* 각 테스트는 인터페이스인 Repository, LoanService에만 의존함. (구현체인 RepositoryImpl, DiscountLoanService, LimitLoanService 에 의존하지 않음)
