@@ -15,8 +15,16 @@ public class ApplicationInit {
         return new BookRepositoryImpl();
     }
 
+    public LoanRepository loanRepository() {
+        return new LoanRepositoryImpl();
+    }
+
+    /**
+     * DiscountLoanService, LimitLoanService 중 하나만 return
+     * @return
+     */
     public LoanService loanService() {
-//        return new DiscountLoanService(memberRepository(), bookRepository());
-        return new LimitLoanService(memberRepository(), bookRepository());
+        return new DiscountLoanService(memberRepository(), bookRepository(), loanRepository());
+//        return new LimitLoanService(memberRepository(), bookRepository(), loanRepository());
     }
 }
