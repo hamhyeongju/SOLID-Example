@@ -7,6 +7,7 @@ import library.solid.domain.Member;
 import library.solid.exception.OutOfLoanLimitException;
 import library.solid.exception.OutOfStockException;
 import library.solid.repository.BookRepository;
+import library.solid.repository.LoanRepository;
 import library.solid.repository.MemberRepository;
 import library.solid.domain.Sequence;
 
@@ -20,10 +21,12 @@ public class DiscountLoanService implements LoanService{
 
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
+    private final LoanRepository loanRepository;
 
-    public DiscountLoanService(MemberRepository memberRepository, BookRepository bookRepository) {
+    public DiscountLoanService(MemberRepository memberRepository, BookRepository bookRepository, LoanRepository loanRepository) {
         this.memberRepository = memberRepository;
         this.bookRepository = bookRepository;
+        this.loanRepository = loanRepository;
     }
 
     @Override
@@ -37,13 +40,11 @@ public class DiscountLoanService implements LoanService{
         int loanPrice = Grade.BASIC.equals(member.getGrade()) ?
                 book.getPrice() / 5 : book.getPrice() / 10;
 
-        return Loan.createLoan(Sequence.getSequence(), bookId, loanPrice, member, book);
+        return Loan.createLoan(Sequence.getSequence(), loanPrice, member, book);
     }
 
     @Override
-    public void returnBook(Long loanId, Long memberId, Long bookId) {
-        Member member = memberRepository.findById(memberId);
-        Book book = bookRepository.findById(bookId);
-        Loan.returnLoan(loanId, member, book);
+    public void returnBook(Loan loan) {
+        loanRepository.delete(loan);
     }
 }
