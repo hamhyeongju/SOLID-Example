@@ -23,9 +23,4 @@ public class Loan {
 
         return loan;
     }
-
-    public static void returnLoan(Long id, Member member, Book book) {
-        member.getLoans().remove(id);
-        book.plusStockQuantity();
-    }
 }
