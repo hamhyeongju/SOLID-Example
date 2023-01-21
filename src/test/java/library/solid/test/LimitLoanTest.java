@@ -3,18 +3,19 @@ package library.solid.test;
 import library.solid.ApplicationInit;
 import library.solid.domain.*;
 import library.solid.exception.OutOfLoanLimitException;
-import library.solid.exception.OutOfStockException;
 import library.solid.repository.BookRepository;
 import library.solid.repository.MemberRepository;
 import library.solid.service.LoanService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+/**
+ * LimitLoanService 정책에 따른 등급별 대출 권수 차이 확인
+ * 공통 정책(회원 등급간 대출 요금 차이 X)
+ */
 public class LimitLoanTest {
 
     static ApplicationInit init = new ApplicationInit();

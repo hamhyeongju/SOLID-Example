@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * 대출 생성 및 삭제, 도서 재고 부족 예외 처리
+ * LoanService 가 바뀌어도 대출 생성/삭제, 핵심 기능은 변함 없이 동작함
  */
 public class LoanTest {
 
