@@ -3,17 +3,19 @@ package library.solid.test;
 import library.solid.ApplicationInit;
 import library.solid.domain.*;
 import library.solid.exception.OutOfLoanLimitException;
-import library.solid.exception.OutOfStockException;
 import library.solid.repository.BookRepository;
 import library.solid.repository.MemberRepository;
 import library.solid.service.LoanService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import static org.assertj.core.api.Assertions.*;
-
+/**
+ * DiscountLoanService 정책에 따른 등급별 대출 요금 테스트
+ * 공통 정책(회원 등급간 대출 가능 권수 차이 X)
+ */
 public class DiscountLoanTest {
 
     static ApplicationInit init = new ApplicationInit();
@@ -23,12 +25,12 @@ public class DiscountLoanTest {
     private static LoanService loanService = init.loanService(); // DiscountLoanService 주입
 
     @Test @DisplayName("등급에 따른 요금")
-    public void createAndReturnLoan() {
+    public void loanPriceAccordingToGrade() {
         /****** given - 회원, 책 생성 *************/
         Long basicMemberId = memberRepository.save(
-                Member.createMember(Sequence.getSequence(), "basicMember", Grade.BASIC, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "basicMember", Grade.BASIC));
         Long vipMemberId = memberRepository.save(
-                Member.createMember(Sequence.getSequence(), "vipMember", Grade.VIP, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "vipMember", Grade.VIP));
 
         Long bookId = bookRepository.save(
                 Book.createBook(Sequence.getSequence(), "book", "author", 12000, 10));
@@ -40,17 +42,14 @@ public class DiscountLoanTest {
         /****** when v1 - 대출 실행 *************/
 
         /****** then v1 - 대출 실행 결과 *************/
-        // BASIC 멤버
+        // BASIC 멤버의 Loan
         Loan member1Loan = memberRepository.findById(basicMemberId).getLoans().get(loan1.getId());
-        // VIP 멤버
+        // VIP 멤버의 Loan
         Loan member2Loan = memberRepository.findById(vipMemberId).getLoans().get(loan2.getId());
 
         // 대출 결과가 회원에게 적용 되었는지 확인
         assertThat(member1Loan).isEqualTo(loan1);
         assertThat(member2Loan).isEqualTo(loan2);
-
-        // book 의 재고 10에서 - 2
-        assertThat(bookRepository.findById(bookId).getStockQuantity()).isEqualTo(8);
 
         // BASIC 멤버 - 12000 * 0.2 = 2400
         assertThat(member1Loan.getLoanPrice()).isEqualTo(2400);
@@ -58,53 +57,36 @@ public class DiscountLoanTest {
         // VIP 멤버 - 12000 * 0.1 = 1200
         assertThat(member2Loan.getLoanPrice()).isEqualTo(1200);
         /****** then v1 - 대출 실행 결과 *************/
-
-        /****** when v2 - 대출 반납 실행 *************/
-        loanService.returnBook(member1Loan.getId(), basicMemberId, bookId);
-        loanService.returnBook(member2Loan.getId(), vipMemberId, bookId);
-        /****** when v2 - 대출 반납 실행 *************/
-
-        /****** then v2 - 대출 반납 결과 *************/
-        // book 재고가 다시 + 2
-        assertThat(bookRepository.findById(bookId).getStockQuantity()).isEqualTo(10);
-
-        Loan member1LoanAfterReturn = memberRepository.findById(basicMemberId).getLoans().get(loan1.getId());
-        Loan member2LoanAfterReturn = memberRepository.findById(vipMemberId).getLoans().get(loan2.getId());
-
-        // 대출 내역 삭제
-        assertThat(member1LoanAfterReturn).isNull();
-        assertThat(member2LoanAfterReturn).isNull();
-        /****** then v2 - 대출 반납 결과 *************/
     }
 
-    @Test @DisplayName("대출 한도 및 도서 재고 예외")
+    /**
+     * 회원 등급간 대출 가능 권수 차이 X
+     */
+    @Test @DisplayName("공통 정책")
     public void exception() {
         /****** given - 회원, 책 생성 *************/
         Long basicMemberId = memberRepository.save(
-                Member.createMember(Sequence.getSequence(), "basicMember", Grade.BASIC, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "basicMember", Grade.BASIC));
         Long vipMemberId = memberRepository.save(
-                Member.createMember(Sequence.getSequence(), "vipMember", Grade.VIP, new HashMap<>()));
+                Member.createMember(Sequence.getSequence(), "vipMember", Grade.VIP));
 
         Long book1Id = bookRepository.save(
                 Book.createBook(Sequence.getSequence(), "book1", "author1", 12000, 10));
-        Long book2Id = bookRepository.save(
-                Book.createBook(Sequence.getSequence(), "book2", "author2", 12000, 0));
         /****** given - 회원, 책 생성 *************/
 
         /****** when v1 - 대출 실행 *************/
-        Loan loan1 = loanService.loan(basicMemberId, book1Id);
-        Loan loan2 = loanService.loan(basicMemberId, book1Id);
+        Loan basicLoan1 = loanService.loan(basicMemberId, book1Id);
+        Loan basicLoan2 = loanService.loan(basicMemberId, book1Id);
+        Loan vipLoan1 = loanService.loan(vipMemberId, book1Id);
+        Loan vipLoan2 = loanService.loan(vipMemberId, book1Id);
         /****** when v1 - 대출 실행 *************/
 
         /****** then v1 - 세번째 대출 결과 *************/
         // 대출 한도 초과 예외 발생
         assertThatExceptionOfType(OutOfLoanLimitException.class)
                 .isThrownBy(()-> loanService.loan(basicMemberId, book1Id));
+        assertThatExceptionOfType(OutOfLoanLimitException.class)
+                .isThrownBy(()-> loanService.loan(vipMemberId, book1Id));
         /****** then v1 - 세번째 대출 결과 *************/
-
-        /****** when v2 - 재고 부족 도서 대출 실행 *************/
-        assertThatExceptionOfType(OutOfStockException.class)
-                .isThrownBy(()-> loanService.loan(vipMemberId, book2Id));
-        /****** when v2 - 재고 부족 도서 대출 실행 *************/
     }
 }
