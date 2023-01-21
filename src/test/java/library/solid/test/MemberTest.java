@@ -3,14 +3,11 @@ package library.solid.test;
 import library.solid.ApplicationInit;
 import library.solid.domain.Grade;
 import library.solid.domain.Member;
-import library.solid.repository.MemberRepository;
 import library.solid.domain.Sequence;
-import org.assertj.core.api.Assertions;
+import library.solid.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MemberTest {
 
@@ -21,8 +18,8 @@ public class MemberTest {
     @Test
     public void createMember() {
         /****** given - 회원 생성 *************/
-        Member basic_member = Member.createMember(Sequence.getSequence(), "Basic member", Grade.BASIC, new HashMap<>());
-        Member vip_member = Member.createMember(Sequence.getSequence(), "VIP member", Grade.VIP, new HashMap<>());
+        Member basic_member = Member.createMember(Sequence.getSequence(), "Basic member", Grade.BASIC);
+        Member vip_member = Member.createMember(Sequence.getSequence(), "VIP member", Grade.VIP);
         Long long1 = memberRepository.save(basic_member);
         Long long2 = memberRepository.save(vip_member);
         /****** given - 회원 생성 *************/
