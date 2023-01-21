@@ -8,5 +8,5 @@ public interface LoanRepository {
 
     Loan findById(Long id);
 
-    void delete(Long id);
+    void delete(Loan loan);
 }

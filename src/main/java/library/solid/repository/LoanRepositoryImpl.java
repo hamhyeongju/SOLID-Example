@@ -21,10 +21,9 @@ public class LoanRepositoryImpl implements LoanRepository{
     }
 
     @Override
-    public void delete(Long id) {
-        Loan findLoan = findById(id);
-        findLoan.getBook().plusStockQuantity();
-        findLoan.getMember().getLoans().remove(id);
-        store.remove(id);
+    public void delete(Loan loan) {
+        loan.getBook().plusStockQuantity();
+        loan.getMember().getLoans().remove(loan.getId());
+        store.remove(loan.getId());
     }
 }
