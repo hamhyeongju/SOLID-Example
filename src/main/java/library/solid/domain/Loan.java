@@ -7,14 +7,16 @@ import lombok.Getter;
 public class Loan {
 
     private Long id;
-    private Long bookId;
     private int loanPrice;
+    private Member member;
+    private Book book;
 
-    public static Loan createLoan(Long id, Long bookId, int loanPrice, Member member, Book book) {
+    public static Loan createLoan(Long id, int loanPrice, Member member, Book book) {
         Loan loan = new Loan();
         loan.id = id;
-        loan.bookId = bookId;
         loan.loanPrice = loanPrice;
+        loan.member = member;
+        loan.book = book;
 
         member.getLoans().put(loan.getId(), loan);
         book.minusStockQuantity();
